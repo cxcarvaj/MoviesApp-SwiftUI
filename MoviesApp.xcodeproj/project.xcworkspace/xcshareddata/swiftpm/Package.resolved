@@ -1,0 +1,15 @@
+{
+  "originHash" : "96b87d965f581722141bd5c275088fc33d1a756c74c51566496810aa11fcad6b",
+  "pins" : [
+    {
+      "identity" : "smp25kit",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:cxcarvaj/SMP25Kit.git",
+      "state" : {
+        "revision" : "4e810ce42627e3f84cb906803cd6889340617f79",
+        "version" : "0.1.0"
+      }
+    }
+  ],
+  "version" : 3
+}

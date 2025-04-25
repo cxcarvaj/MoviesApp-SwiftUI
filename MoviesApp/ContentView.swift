@@ -6,19 +6,25 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Query(sort: [SortDescriptor<Movies>(\.title)]) var movies: [Movies]
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        List(movies) { movie in
+            VStack(alignment: .leading) {
+                Text(movie.title)
+                    .font(.headline)
+                Text(movie.genres.map(\.name).sorted().formatted(.list(type: .and)))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+
+            }
         }
-        .padding()
     }
 }
 
-#Preview {
+#Preview(traits: .sampleData) {
     ContentView()
 }

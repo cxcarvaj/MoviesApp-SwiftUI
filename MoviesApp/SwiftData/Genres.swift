@@ -11,13 +11,24 @@ import SwiftData
 final class Genres {
     @Attribute(.unique) var id: Int
     var name: String
-    @Relationship(deleteRule: .cascade, inverse: \Movies.genres) var movies: [Movies]
+    @Relationship(deleteRule: .cascade, inverse: \MoviesGenres.genre) var moviesGenres: [MoviesGenres]?
     
-    init(id: Int, name: String, movies: [Movies] = []) {
-        // Como yo voy a permitir crear un género sin peliculas, lo inicializo con un array vacio.
-        // Si yo no quiero permitir eso, entonces le quito el valor opcional
+    init(id: Int, name: String) {
         self.id = id
         self.name = name
-        self.movies = movies
     }
+}
+
+@Model
+final class MoviesGenres {
+    @Attribute(.unique) var id: UUID
+    @Relationship(deleteRule: .cascade) var movie: Movies
+    @Relationship(deleteRule: .cascade) var genre: Genres
+    
+    init(id: UUID = UUID(), movie: Movies, genre: Genres) {
+        self.id = id
+        self.movie = movie
+        self.genre = genre
+    }
+    
 }

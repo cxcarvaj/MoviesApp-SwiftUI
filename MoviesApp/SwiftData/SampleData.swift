@@ -17,10 +17,10 @@ struct SampleData: PreviewModifier {
         
         let container = try ModelContainer(for: Movies.self, configurations: configuration)
         
-        let moviesAppTestContainer = MovieAppPreviewContainer(context: container.mainContext)
+        let moviesAppTestContainer = MoviesAppPreviewContainer(context: container.mainContext)
 
         try moviesAppTestContainer.loadGenres()
-        try moviesAppTestContainer.loadNowPlayingMovies()
+        try moviesAppTestContainer.loadMovies()
         
         return container
     }

@@ -9,22 +9,29 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Query(sort: [SortDescriptor<Movies>(\.title)]) var movies: [Movies]
+    @Environment(MoviesVM.self) private var vm
+    @Query(filter: #Predicate { $0.nowPlaying },
+           sort: [SortDescriptor<Movies>(\.title)]) var movies: [Movies]
+    let columns = [GridItem(.adaptive(minimum: 150))]
     
     var body: some View {
-        List(movies) { movie in
-            VStack(alignment: .leading) {
-                Text(movie.title)
-                    .font(.headline)
-                Text(movie.genres.map(\.name).sorted().formatted(.list(type: .and)))
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-
+        ScrollView {
+            LazyVGrid(columns: columns) {
+                ForEach(movies) { movie in
+                    VStack {
+                        PosterView(movie: movie)
+                        Text(vm.getGenres(movie: movie))
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
         }
+        .safeAreaPadding()
     }
 }
 
 #Preview(traits: .sampleData) {
     ContentView()
+        .environment(MoviesVM())
 }

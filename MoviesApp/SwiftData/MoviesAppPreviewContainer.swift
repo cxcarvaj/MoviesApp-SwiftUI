@@ -1,5 +1,5 @@
 //
-//  MovieAppPreviewContainer.swift
+//  MoviesAppPreviewContainer.swift.swift
 //  MoviesApp
 //
 //  Created by Carlos Xavier Carvajal Villegas on 24/4/25.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @MainActor
-final class MovieAppPreviewContainer: Sendable {
+final class MoviesAppPreviewContainer: Sendable {
     
     static let movieDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -57,7 +57,7 @@ final class MovieAppPreviewContainer: Sendable {
         }
     }
     
-    func loadNowPlayingMovies() throws {
+    func loadMovies() throws {
         let data = try Data(contentsOf: urlNowPlayingMovies)
         let moviesDTO = try decoder.decode(MovieResponseDTO.self, from: data).results
 //        moviesDTO.forEach {
@@ -71,17 +71,22 @@ final class MovieAppPreviewContainer: Sendable {
 //                               genres: [])
 //            context.insert(movie)
 //        }
-        try moviesDTO.map {
-            Movies(id: $0.id,
-                   title: $0.title,
-                   originalTitle: $0.originalTitle,
-                   originalLanguage: $0.originalLanguage,
-                   overview: $0.overview,
-                   releaseDate: $0.releaseDate,
-                   voteAverage: $0.voteAverage,
-                   genres: try fetchGenresByIds($0.genreIds))
-        }.forEach {
-            context.insert($0)
+        try moviesDTO.forEach { movie in
+            let newMovie = Movies(id: movie.id,
+                                  title: movie.title,
+                                  originalTitle: movie.originalTitle,
+                                  originalLanguage: movie.originalLanguage,
+                                  overview: movie.overview,
+                                  releaseDate: movie.releaseDate,
+                                  poster: movie.posterPath,
+                                  backdrop: movie.backdropPath,
+                                  voteAverage: movie.voteAverage)
+            context.insert(newMovie)
+            
+            try fetchGenresByIds(movie.genreIds).forEach { genre in
+                let moviesGenres = MoviesGenres(movie: newMovie, genre: genre)
+                context.insert(moviesGenres)
+            }
         }
     }
     

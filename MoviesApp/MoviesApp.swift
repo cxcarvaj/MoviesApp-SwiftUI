@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-let APIKey = ""
+let APIKey = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzgxYTNkMzQ0OTJjODI1MDI4NGMxMzllOTAwMWRhYyIsIm5iZiI6MTY3Mjk1MjYwMS40NjIwMDAxLCJzdWIiOiI2M2I3M2IxOTkzYmQ2OTAwODIxNjAwOGYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.ZE9GZGyIHqRn8PyK8pzLuFvrEkVrXwQhomKmbPqdfAM"
 
 @main
 struct MoviesApp: App {

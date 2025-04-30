@@ -6,12 +6,12 @@
 //
 
 import SwiftUI
-import SwiftData
 import SMP25Kit
 
 struct PosterView: View {
     @State private var imageVM = AsyncImageVM()
     let movie: Movies
+    let namespace: Namespace.ID
     
     var body: some View {
         if let poster = imageVM.image {
@@ -19,6 +19,7 @@ struct PosterView: View {
                 .resizable()
                 .scaledToFit()
 //                .frame(width: 200, height: 300)
+                .matchedTransitionSource(id: "poster\(movie.id)", in: namespace)
                 .overlay(alignment: .bottom) {
                     Rectangle()
                         .fill(Color.black.opacity(0.8))
@@ -49,6 +50,7 @@ struct PosterView: View {
                     Color.gray.opacity(0.2)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 5))
+                .matchedTransitionSource(id: "poster\(movie.id)", in: namespace)
                 .onAppear {
                     imageVM.getImage(url: movie.poster)
                 }
@@ -68,5 +70,6 @@ struct PosterView: View {
 }
 
 #Preview(traits: .sampleData) {
-    PosterView(movie: .testMovie)
+    @Previewable @Namespace var namespace
+    PosterView(movie: .testMovie, namespace: namespace)
 }

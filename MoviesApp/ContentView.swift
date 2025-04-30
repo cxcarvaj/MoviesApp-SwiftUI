@@ -8,27 +8,57 @@
 import SwiftUI
 import SwiftData
 
+enum MovieType: String, CaseIterable, Identifiable {
+    var id: Self { self }
+    case nowPlaying = "Now Playing"
+    case upcoming = "Upcoming"
+}
+
 struct ContentView: View {
-    @Environment(MoviesVM.self) private var vm
-    @Query(filter: #Predicate { $0.nowPlaying },
-           sort: [SortDescriptor<Movies>(\.title)]) var movies: [Movies]
-    let columns = [GridItem(.adaptive(minimum: 150))]
+    @State private var selectedMovieType: MovieType = .nowPlaying
+    @Namespace private var namespace
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns) {
-                ForEach(movies) { movie in
-                    VStack {
-                        PosterView(movie: movie)
-                        Text(vm.getGenres(movie: movie))
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+       NavigationStack {
+           VStack {
+               Picker(selection: $selectedMovieType) {
+                   ForEach(MovieType.allCases) { movieType in
+                       Text(movieType.rawValue)
+                           .tag(movieType)
+                   }
+               } label: {
+                   Text("Movie Type List")
+               }
+               .pickerStyle(.segmented)
+    //            ScrollView {
+    //                switch selectedMovieType {
+    //                case .nowPlaying:
+    //                    MoviesView(predicate: #Predicate { $0.nowPlaying })
+    //                case .upcoming:
+    //                    MoviesView(predicate: #Predicate { $0.upcoming })
+    //                }
+    //
+    //            }
+               // Pantallas con Opacity 0, no consumen bateria
+               ZStack {
+                   MoviesView(predicate: #Predicate { $0.nowPlaying }, namespace: namespace)
+                       .opacity( selectedMovieType == .nowPlaying ? 1 : 0)
+                       .offset(x: selectedMovieType == .upcoming ? -300 : 0)
+                   MoviesView(predicate: #Predicate { $0.upcoming }, namespace: namespace)
+                       .opacity( selectedMovieType == .upcoming ? 1 : 0)
+                       .offset(x: selectedMovieType == .nowPlaying ? 300 : 0)
+               }
             }
-        }
-        .safeAreaPadding()
+           .safeAreaPadding()
+           .animation(.bouncy, value: selectedMovieType)
+           .navigationDestination(for: Movies.self) { movie in
+               MovieDetails(movie: movie)
+                   .navigationTransition(.zoom(sourceID: "poster\(movie.id)", in: namespace))
+           }
+       }
     }
+
+
 }
 
 #Preview(traits: .sampleData) {

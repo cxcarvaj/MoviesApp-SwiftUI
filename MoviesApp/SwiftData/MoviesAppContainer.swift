@@ -11,7 +11,7 @@ import SwiftData
 // Este actor se va a encargar de la carga de los datos.
 @ModelActor
 actor MoviesAppContainer {
-    let repository = Repository()
+    var repository: NetworkRepository = Repository()
     
     func initialize() async throws {
         let genresDTO = try await repository.getGenres()

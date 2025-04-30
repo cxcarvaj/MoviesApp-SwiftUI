@@ -81,6 +81,12 @@ final class MoviesAppPreviewContainer: Sendable {
                                   poster: movie.posterPath,
                                   backdrop: movie.backdropPath,
                                   voteAverage: movie.voteAverage)
+            if Bool.random() {
+                newMovie.nowPlaying = true
+            } else {
+                newMovie.upcoming = true
+            }
+            
             context.insert(newMovie)
             
             try fetchGenresByIds(movie.genreIds).forEach { genre in

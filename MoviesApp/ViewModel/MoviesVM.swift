@@ -9,7 +9,7 @@ import SwiftUI
 
 @Observable
 final class MoviesVM {
-    func getGenres(movie: Movies) -> String {
+    func getGenresString(movie: Movies) -> String {
         movie.moviesGenres?.map(\.genre).map(\.name).formatted(.list(type: .and)) ?? ""
     }
 }

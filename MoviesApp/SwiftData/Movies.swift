@@ -26,7 +26,9 @@ final class Movies {
     // Por eso la relación que se debe crear, debe ser n:n
 //    @Relationship(deleteRule: .deny) var genres: [Genres]
     @Relationship(deleteRule: .cascade, inverse: \MoviesGenres.movie) var moviesGenres: [MoviesGenres]?
-
+    @Relationship(deleteRule: .cascade) var moviesDetails: MoviesDetails?
+    @Relationship(deleteRule: .cascade, inverse: \CastCrew.movies) var castCrew: [CastCrew]?
+    @Relationship(deleteRule: .cascade, inverse: \ProductionCompany.movies) var productionCompany: [ProductionCompany]?
     
     init(id: Int, title: String, originalTitle: String, originalLanguage: String, overview: String, releaseDate: Date, poster: URL?, backdrop: URL?, voteAverage: Double) {
         // Como yo voy a permitir generar una pelicula sin género, lo inicializo con un array vacio.
@@ -59,7 +61,14 @@ extension Movies {
          
          let moviesGenres = MoviesGenres(movie: movie, genre: genre)
          movie.moviesGenres?.append(moviesGenres)
-         
+         movie.moviesDetails = .detailsTest
+         let testProduction = ProductionCompany.testCompany
+         testProduction.movies.append(movie)
+         let (testCast1, testCast2, testCrew1, testCrew2) = (CastCrew.testCast1, CastCrew.testCast2, CastCrew.testCrew1, CastCrew.testCrew2)
+         testCast1.movies.append(movie)
+         testCast2.movies.append(movie)
+         testCrew1.movies.append(movie)
+         testCrew2.movies.append(movie)
          return movie
      }()
  }

@@ -93,6 +93,17 @@ final class MoviesAppPreviewContainer: Sendable {
                 let moviesGenres = MoviesGenres(movie: newMovie, genre: genre)
                 context.insert(moviesGenres)
             }
+            if movie.id == 986056 {
+                 let movieDetails = MoviesDetails.detailsTest
+                 newMovie.moviesDetails = movieDetails
+                 let testProduction = ProductionCompany.testCompany
+                 testProduction.movies.append(newMovie)
+                 let (testCast1, testCast2, testCrew1, testCrew2) = (CastCrew.testCast1, CastCrew.testCast2, CastCrew.testCrew1, CastCrew.testCrew2)
+                 testCast1.movies.append(newMovie)
+                 testCast2.movies.append(newMovie)
+                 testCrew1.movies.append(newMovie)
+                 testCrew2.movies.append(newMovie)
+             }
         }
     }
     

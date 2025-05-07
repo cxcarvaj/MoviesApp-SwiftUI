@@ -6,10 +6,22 @@
 //
 
 import SwiftUI
+import SwiftData
 
-@Observable
+@Observable @MainActor
 final class MoviesVM {
+    // Solución < iOS 18
+    var container: MoviesAppContainer?
+    
     func getGenresString(movie: Movies) -> String {
         movie.moviesGenres?.map(\.genre).map(\.name).formatted(.list(type: .and)) ?? ""
+    }
+    
+    func getDetails(forMovieId id: Int) async {
+        do {
+            try await container?.getDetails(forMovieId: id)
+        } catch {
+            print("Error getting details for movie \(id): \(error)")
+        }
     }
 }

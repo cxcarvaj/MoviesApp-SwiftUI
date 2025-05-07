@@ -10,45 +10,40 @@ import SMP25Kit
 
 struct CastCrewImage: View {
     @State private var vm = AsyncImageVM()
-    let castCrew: CastCrew
-    
+    let name: String
+    let detail: String
+    let url: URL?
+
     var body: some View {
         RoundedRectangle(cornerRadius: 10)
             .fill(.background)
             .frame(width: 125, height: 225)
             .overlay(alignment: .top) {
-                VStack(alignment: .leading) {
+                VStack {
                     if let image = vm.image {
                         Image(uiImage: image)
                             .resizable()
                             .scaledToFill()
                             .frame(height: 160)
                             .clipped()
-
                     } else {
                         Image(systemName: "person")
                             .resizable()
-                            .scaledToFit()
-                            .padding()
+                            .scaledToFill()
                             .symbolVariant(.fill)
+                            .frame(height: 110)
+                            .padding()
                             .background {
                                 Color.gray.opacity(0.3)
                             }
                             .clipped()
                     }
-                    
-                    VStack(alignment: .leading) {
-                        Text(castCrew.name)
+                    VStack {
+                        Text(name)
                             .font(.caption)
                             .bold()
-                        
-                        Text(castCrew.character ?? "")
+                        Text(detail)
                             .font(.caption)
-                        
-                        if let job = castCrew.job {
-                            Text(job)
-                                .font(.caption)
-                        }
                     }
                     .padding(.horizontal, 5)
                 }
@@ -56,15 +51,22 @@ struct CastCrewImage: View {
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .shadow(color: .black.opacity(0.4), radius: 5, x: 0, y: 5)
             .onAppear {
-                vm.getImage(url: castCrew.profileImage)
+                vm.getImage(url: url)
             }
+            
     }
 }
 
-#Preview("Cast Crew") {
-    CastCrewImage(castCrew: .testCast1)
+#Preview {
+    let test = Cast.testCast1
+    CastCrewImage(name: test.person.name,
+              detail: test.character,
+              url: test.person.profileImage)
 }
 
-#Preview("Test Crew") {
-    CastCrewImage(castCrew: .testCrew2)
+#Preview {
+    let test = Cast.testCast2
+    CastCrewImage(name: test.person.name,
+              detail: test.character,
+              url: test.person.profileImage)
 }

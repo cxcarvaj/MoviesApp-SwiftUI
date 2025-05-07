@@ -27,7 +27,8 @@ final class Movies {
 //    @Relationship(deleteRule: .deny) var genres: [Genres]
     @Relationship(deleteRule: .cascade, inverse: \MoviesGenres.movie) var moviesGenres: [MoviesGenres]?
     @Relationship(deleteRule: .cascade) var moviesDetails: MoviesDetails?
-    @Relationship(deleteRule: .cascade, inverse: \CastCrew.movies) var castCrew: [CastCrew]?
+    @Relationship(deleteRule: .cascade, inverse: \Cast.movies) var cast: [Cast]?
+    @Relationship(deleteRule: .cascade, inverse: \Crew.movies) var crew: [Crew]?
     @Relationship(deleteRule: .cascade, inverse: \ProductionCompany.movies) var productionCompany: [ProductionCompany]?
     
     init(id: Int, title: String, originalTitle: String, originalLanguage: String, overview: String, releaseDate: Date, poster: URL?, backdrop: URL?, voteAverage: Double) {
@@ -64,7 +65,7 @@ extension Movies {
          movie.moviesDetails = .detailsTest
          let testProduction = ProductionCompany.testCompany
          testProduction.movies.append(movie)
-         let (testCast1, testCast2, testCrew1, testCrew2) = (CastCrew.testCast1, CastCrew.testCast2, CastCrew.testCrew1, CastCrew.testCrew2)
+         let (testCast1, testCast2, testCrew1, testCrew2) = (Cast.testCast1, Cast.testCast2, Crew.testCrew1, Crew.testCrew2)
          testCast1.movies.append(movie)
          testCast2.movies.append(movie)
          testCrew1.movies.append(movie)

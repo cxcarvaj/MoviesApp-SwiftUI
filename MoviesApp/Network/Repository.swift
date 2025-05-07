@@ -26,6 +26,8 @@ protocol NetworkRepository: NetworkInteractor, Sendable {
     func getNowPlayingMovies() async throws(NetworkError) -> [MovieDTO]
     
     func getUpcomingMovies() async throws(NetworkError) -> [MovieDTO]
+    
+    func getDetails(forMovieId: Int) async throws(NetworkError) -> MovieDetailsDTO
 }
 
 extension NetworkRepository {
@@ -43,5 +45,10 @@ extension NetworkRepository {
     func getUpcomingMovies() async throws(NetworkError) -> [MovieDTO] {
         let headers: [String: String] = ["Bearer \(APIKey)":"Authorization"]
         return try await getJSON(.get(.upcomingMovies, authorizedHeader: headers), type: MovieResponseDTO.self).results
+    }
+    
+    func getDetails(forMovieId id: Int) async throws(NetworkError) -> MovieDetailsDTO {
+        let headers: [String: String] = ["Bearer \(APIKey)":"Authorization"]
+        return try await getJSON(.get(.movieApi(id: id), authorizedHeader: headers), type: MovieDetailsDTO.self)
     }
 }

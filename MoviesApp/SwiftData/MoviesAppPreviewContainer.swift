@@ -45,11 +45,14 @@ final class MoviesAppPreviewContainer: Sendable {
     
     func loadGenres() throws {
         let data = try Data(contentsOf: urlGenres)
-        let genresDTO = try decoder.decode(GenresResponseDTO.self, from: data).genres
-//        genresDTO.forEach {
-//            let genre = Genres(id: $0.id, name: $0.name)
-//            context.insert(genre)
-//        }
+        let genresDTO = try decoder.decode(
+            GenresResponseDTO.self,
+            from: data
+        ).genres
+        //        genresDTO.forEach {
+        //            let genre = Genres(id: $0.id, name: $0.name)
+        //            context.insert(genre)
+        //        }
         genresDTO.map {
             Genres(id: $0.id, name: $0.name)
         }.forEach {
@@ -59,18 +62,21 @@ final class MoviesAppPreviewContainer: Sendable {
     
     func loadMovies() throws {
         let data = try Data(contentsOf: urlNowPlayingMovies)
-        let moviesDTO = try decoder.decode(MovieResponseDTO.self, from: data).results
-//        moviesDTO.forEach {
-//            let movie = Movies(id: $0.id,
-//                               title: $0.title,
-//                               originalTitle: $0.originalTitle,
-//                               originalLanguage: $0.originalLanguage,
-//                               overview: $0.overview,
-//                               releaseDate: $0.releaseDate,
-//                               voteAverage: $0.voteAverage,
-//                               genres: [])
-//            context.insert(movie)
-//        }
+        let moviesDTO = try decoder.decode(
+            MovieResponseDTO.self,
+            from: data
+        ).results
+        //        moviesDTO.forEach {
+        //            let movie = Movies(id: $0.id,
+        //                               title: $0.title,
+        //                               originalTitle: $0.originalTitle,
+        //                               originalLanguage: $0.originalLanguage,
+        //                               overview: $0.overview,
+        //                               releaseDate: $0.releaseDate,
+        //                               voteAverage: $0.voteAverage,
+        //                               genres: [])
+        //            context.insert(movie)
+        //        }
         try moviesDTO.forEach { movie in
             let newMovie = Movies(id: movie.id,
                                   title: movie.title,
@@ -94,16 +100,23 @@ final class MoviesAppPreviewContainer: Sendable {
                 context.insert(moviesGenres)
             }
             if movie.id == 986056 {
-                 let movieDetails = MoviesDetails.detailsTest
-                 newMovie.moviesDetails = movieDetails
-                 let testProduction = ProductionCompany.testCompany
-                 testProduction.movies.append(newMovie)
-                 let (testCast1, testCast2, testCrew1, testCrew2) = (CastCrew.testCast1, CastCrew.testCast2, CastCrew.testCrew1, CastCrew.testCrew2)
-                 testCast1.movies.append(newMovie)
-                 testCast2.movies.append(newMovie)
-                 testCrew1.movies.append(newMovie)
-                 testCrew2.movies.append(newMovie)
-             }
+                let movieDetails = MoviesDetails.detailsTest
+                context.insert(movieDetails)
+                newMovie.moviesDetails = movieDetails
+                let testProduction = ProductionCompany.testCompany
+                context.insert(testProduction)
+                testProduction.movies.append(newMovie)
+                let (testCast1, testCast2, testCrew1, testCrew2) = (
+                    Cast.testCast1,
+                    Cast.testCast2,
+                    Crew.testCrew1,
+                    Crew.testCrew2
+                )
+                testCast1.movies.append(newMovie)
+                testCast2.movies.append(newMovie)
+                testCrew1.movies.append(newMovie)
+                testCrew2.movies.append(newMovie)
+            }
         }
     }
     

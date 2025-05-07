@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct MovieDetails: View {
+    @Environment(MoviesVM.self) private var vm // Solución < iOS 18
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.container) private var container //Solución para iOS 18+
     let movie: Movies
     
     var body: some View {
@@ -83,11 +85,11 @@ struct MovieDetails: View {
                     VStack(alignment: .leading, spacing: 0) {
                          Text("Movie cast")
                              .font(.headline)
-                         CastCrewView(movie: movie, selection: .cast)
+                         CastView(movie: movie)
                              .padding(.bottom, 10)
                          Text("Movie crew")
                              .font(.headline)
-                         CastCrewView(movie: movie, selection: .crew)
+                         CrewView(movie: movie)
                      }
                     
                     if let productionCompany = movie.productionCompany {
@@ -119,9 +121,18 @@ struct MovieDetails: View {
         .circleCloseButton {
             dismiss()
         }
+        .task {
+//            await vm.getDetails(forMovieId: movie.id)
+            do {
+                try await container?.getDetails(forMovieId: movie.id)
+            } catch {
+                print("Error getting details for movie \(movie.id): \(error)")
+            }
+        }
     }
 }
 
 #Preview(traits: .sampleData) {
     MovieDetails(movie: .testMovie)
+        .environment(MoviesVM())
 }
